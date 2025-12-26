@@ -36,6 +36,8 @@ jobs:
   release:
     runs-on: ubuntu-latest
     needs: build-for-release
+    permissions:
+      contents: write
     steps:
     - uses: actions/checkout@v4
     
