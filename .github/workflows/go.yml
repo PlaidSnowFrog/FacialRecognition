@@ -1,8 +1,6 @@
 # This workflow will build a golang project
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-go
-
 name: Go
-
 on:
   push:
     branches: [ "main" ]
@@ -16,7 +14,6 @@ jobs:
       image: gocv/opencv:4.10.0
     steps:
     - uses: actions/checkout@v4
-
     - name: Fix ownership issues
       run: git config --global --add safe.directory /__w/FacialRecognition/FacialRecognition
     
@@ -26,4 +23,13 @@ jobs:
         go-version: '1.24'
     
     - name: Build
-      run: go build -v ./...
+      run: |
+        mkdir -p release
+        go build -v -o release/FacialRecognition ./...
+        
+    - name: Upload build artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: facial-recognition-linux
+        path: release/
+        retention-days: 7
