@@ -8,23 +8,19 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
-
+    
 jobs:
-
   build:
     runs-on: ubuntu-latest
+    container:
+      image: gocv/opencv:4.10.0
     steps:
     - uses: actions/checkout@v4
-
-    - name: Install OpenCV
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y libopencv-dev pkg-config
-
+    
     - name: Set up Go
       uses: actions/setup-go@v4
       with:
         go-version: '1.24'
-
+    
     - name: Build
       run: go build -v ./...
