@@ -25,7 +25,7 @@ jobs:
     - name: Build
       run: |
         mkdir -p release
-        go build -v -o ./...
+        go build -v ./...
         
     - name: Upload build artifact
       uses: actions/upload-artifact@v4
