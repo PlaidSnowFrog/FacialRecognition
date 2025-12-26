@@ -1,0 +1,55 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    needs: build-for-release
+    steps:
+    - uses: actions/checkout@v4
+    
+    # Download the artifact from the build job
+    - name: Download build artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: facial-recognition-linux
+        path: ./release
+    
+    # Create the release and attach the binaries
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: release/*
+        generate_release_notes: true
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # This runs your existing build workflow for the release
+  build-for-release:
+    runs-on: ubuntu-latest
+    container:
+      image: gocv/opencv:4.10.0
+    steps:
+    - uses: actions/checkout@v4
+    - name: Fix ownership issues
+      run: git config --global --add safe.directory /__w/FacialRecognition/FacialRecognition
+    
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.24'
+    
+    - name: Build
+      run: go build -v ./...
+    - name: Upload build artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: facial-recognition-linux
+        path: release/
+        retention-days: 7
