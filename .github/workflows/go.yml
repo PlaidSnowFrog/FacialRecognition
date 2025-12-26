@@ -16,6 +16,9 @@ jobs:
       image: gocv/opencv:4.10.0
     steps:
     - uses: actions/checkout@v4
+
+    - name: Fix ownership issues
+      run: git config --global --add safe.directory /__w/FacialRecognition/FacialRecognition
     
     - name: Set up Go
       uses: actions/setup-go@v4
